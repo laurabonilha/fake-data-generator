@@ -1,7 +1,7 @@
 # Virtual environment
 venv/
 .venv/
-env
+.env
 
 # Python cache
 __pycache__/
@@ -13,5 +13,8 @@ __pycache__/
 .idea/
 .vscode/
 
+# Arquivo de teste
+teste.py
 
-
+# Banco de dados
+db.sqlite3

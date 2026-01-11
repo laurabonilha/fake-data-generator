@@ -1,0 +1,152 @@
+<!-- generator/templates/generator/home.html -->
+{% extends 'generator/base.html' %}
+
+{% block title %}Home - Fake Data Generator{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <div class="text-center mb-5">
+            <h1 class="display-4">Gerador de Dados Fake</h1>
+            <p class="lead text-muted">Gere dados realistas para testes e desenvolvimento</p>
+        </div>
+
+        <div class="card shadow">
+            <div class="card-body p-4">
+                <form id="generatorForm">
+                    <div class="mb-3">
+                        <label for="dataType" class="form-label fw-bold">Tipo de Dado</label>
+                        <select class="form-select" id="dataType" name="data_type">
+                            <option value="person">👤 Pessoas</option>
+                            <option value="company">🏢 Empresas</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quantity" class="form-label fw-bold">Quantidade</label>
+                        <input 
+                            type="number" 
+                            class="form-control" 
+                            id="quantity" 
+                            name="quantity" 
+                            min="1" 
+                            max="1000" 
+                            value="10"
+                        >
+                        <small class="text-muted">Mínimo: 1 | Máximo: 1000</small>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">Formato de Exportação</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="export_format" id="preview" value="preview" checked>
+                            <label class="btn btn-outline-primary" for="preview">👁️ Visualizar</label>
+
+                            <input type="radio" class="btn-check" name="export_format" id="json" value="json">
+                            <label class="btn btn-outline-primary" for="json">📄 JSON</label>
+
+                            <input type="radio" class="btn-check" name="export_format" id="csv" value="csv">
+                            <label class="btn btn-outline-primary" for="csv">📊 CSV</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-lg w-100">
+                        🎲 Gerar Dados
+                    </button>
+                </form>
+
+                <div id="result" class="mt-4" style="display: none;">
+                    <hr>
+                    <div id="alertContainer"></div>
+                    <div id="previewContainer"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 text-center">
+            <p class="text-muted">
+                <small>💡 Dica: Use esses dados para popular bancos de testes, criar protótipos ou desenvolver APIs.</small>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.getElementById('generatorForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const params = new URLSearchParams(formData);
+    const exportFormat = formData.get('export_format');
+    
+    const resultDiv = document.getElementById('result');
+    const alertContainer = document.getElementById('alertContainer');
+    const previewContainer = document.getElementById('previewContainer');
+    
+    resultDiv.style.display = 'none';
+    alertContainer.innerHTML = '';
+    previewContainer.innerHTML = '';
+    
+    try {
+        const response = await fetch(`/gerar/?${params.toString()}`);
+        
+        if (exportFormat === 'preview') {
+            const data = await response.json();
+            
+            if (data.success) {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-success">
+                        ${data.message}
+                    </div>
+                `;
+                
+                previewContainer.innerHTML = `
+                    <h5>Preview dos dados (${data.data.length} de ${data.total}):</h5>
+                    <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">${JSON.stringify(data.data, null, 2)}</pre>
+                `;
+                
+                resultDiv.style.display = 'block';
+            } else {
+                alertContainer.innerHTML = `
+                    <div class="alert alert-danger">
+                        Erro: ${data.error}
+                    </div>
+                `;
+                resultDiv.style.display = 'block';
+            }
+        } else {
+            // Download do arquivo
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            
+            const contentDisposition = response.headers.get('content-disposition');
+            const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
+            
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            alertContainer.innerHTML = `
+                <div class="alert alert-success">
+                    Download iniciado! ✅
+                </div>
+            `;
+            resultDiv.style.display = 'block';
+        }
+    } catch (error) {
+        alertContainer.innerHTML = `
+            <div class="alert alert-danger">
+                Erro ao gerar dados: ${error.message}
+            </div>
+        `;
+        resultDiv.style.display = 'block';
+    }
+});
+</script>
+{% endblock %}

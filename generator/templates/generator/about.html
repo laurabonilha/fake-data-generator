@@ -1,0 +1,67 @@
+<!-- generator/templates/generator/about.html -->
+{% extends 'generator/base.html' %}
+
+{% block title %}Sobre - Fake Data Generator{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto">
+        <h1 class="mb-4">Sobre o Projeto</h1>
+        
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>🎯 Objetivo</h3>
+                <p>
+                    O <strong>Fake Data Generator</strong> é uma ferramenta desenvolvida para auxiliar 
+                    desenvolvedores e testadores a gerar dados realistas para ambientes de desenvolvimento 
+                    e testes.
+                </p>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>🚀 Funcionalidades</h3>
+                <ul>
+                    <li>Geração de dados de pessoas (nome, CPF, email, telefone, endereço)</li>
+                    <li>Geração de dados de empresas (CNPJ, razão social, contatos)</li>
+                    <li>Exportação em múltiplos formatos (JSON, CSV)</li>
+                    <li>Preview dos dados antes do download</li>
+                    <li>Geração de até 1000 registros por vez</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-body">
+                <h3>🛠️ Tecnologias</h3>
+                <div class="row">
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>Django:</strong> Framework web Python</li>
+                            <li><strong>Faker:</strong> Biblioteca de geração de dados</li>
+                            <li><strong>Bootstrap:</strong> Framework CSS</li>
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <ul>
+                            <li><strong>Python:</strong> Linguagem de programação</li>
+                            <li><strong>SQLite:</strong> Banco de dados</li>
+                            <li><strong>JavaScript:</strong> Interatividade do frontend</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3>📝 Versão</h3>
+                <p class="mb-0">
+                    <strong>V0.1.0</strong> - Versão inicial do projeto com funcionalidades básicas.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
