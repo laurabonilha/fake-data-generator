@@ -81,15 +81,53 @@ http://localhost:8000
 fake-data-generator/
 ├── config/                 # Configurações do Django
 ├── generator/              # App principal
-│   ├── generators/         # Geradores de dados
-│   ├── exporters/          # Exportadores (JSON, CSV)
-|   ├── migrations          # Migrações Django
-│   ├── templates/          # Templates HTML
-│   └── views.py            # Views
-├── static/                 # Arquivos estáticos
+│   ├── exporters/         # Exportadores (JSON, CSV)
+│   ├── generators/        # Geradores de dados
+│   ├── templates/         # Templates HTML
+│   ├── migrations/        # Migrações
+│   ├── tests/             # Testes automatizados
+│   └── views.py           # Views
+├── static/                # Arquivos estáticos
 ├── manage.py
 ├── requirements.txt
 └── README.md
+```
+
+## 🧪 Testes
+
+O projeto possui testes automatizados com **pytest** para garantir a qualidade do código.
+
+### Executar os Testes
+
+```bash
+# Rodar todos os testes
+pytest
+
+# Rodar com mais detalhes
+pytest -v
+
+# Rodar com cobertura
+pytest --cov
+
+# Gerar relatório HTML de cobertura
+pytest --cov --cov-report=html
+```
+
+### Cobertura Atual
+
+O projeto mantém **alta cobertura de testes** (85%+), testando:
+- ✅ Geradores de dados (PersonGenerator, CompanyGenerator)
+- ✅ Exportadores (JSON, CSV)
+- ✅ Views e integrações
+- ✅ Validações e casos de erro
+
+### Estrutura de Testes
+
+```
+generator/tests/
+├── test_generators.py    # Testes dos geradores
+├── test_exporters.py     # Testes dos exportadores
+└── test_views.py         # Testes das views
 ```
 
 ## 🎯 Roadmap
@@ -99,18 +137,20 @@ fake-data-generator/
 - [x] Geração de empresas
 - [x] Exportação JSON/CSV
 - [x] Interface básica
+- [x] Testes automatizados (85%+ cobertura)
 
 ### V1 (Próximas funcionalidades)
 - [ ] API REST
 - [ ] Mais tipos de dados (produtos, transações)
 - [ ] Templates customizáveis
 - [ ] Histórico de gerações
-- [ ] Testes automatizados
+- [ ] CI/CD (GitHub Actions)
 
 ### V2 (Futuro)
 - [ ] Autenticação de usuários
 - [ ] Dashboard com estatísticas
 - [ ] Geração em lote/agendada
+
 
 ## 👩‍💻 Autora
 

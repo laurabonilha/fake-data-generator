@@ -1,20 +1,42 @@
-# Virtual environment
-venv/
-.venv/
-.env
-
-# Python cache
-__pycache__/
+# Python
 *.py[cod]
 *$py.class
+__pycache__/
+*.so
+.Python
 
-# Configurações de IDEs
-.DS_Store
-.idea/
-.vscode/
-
-# Arquivo de teste
-teste.py
-
-# Banco de dados
+# Django
+*.log
 db.sqlite3
+db.sqlite3-journal
+/media
+/static
+
+# Ambientes virtuais
+venv/
+env/
+ENV/
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Variáveis de ambiente
+.env
+.env.local
+
+# Testes
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# OS
+.DS_Store
+Thumbs.db
