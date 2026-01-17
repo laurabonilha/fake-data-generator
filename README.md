@@ -14,13 +14,18 @@ O Fake Data Generator é uma ferramenta web que permite gerar dados realistas de
 - ✅ Preview dos dados antes do download
 - ✅ Geração de até 1000 registros por vez
 - ✅ Interface responsiva e intuitiva
+- ✅ **API REST com documentação interativa**
+- ✅ **Rate limiting e validações**
 
 ## 🛠️ Tecnologias Utilizadas
 
 - **Python 3.11+**
 - **Django 5.0**
+- **Django REST Framework** - API REST
+- **drf-spectacular** - Documentação OpenAPI/Swagger
 - **Faker** - Geração de dados fake
 - **Bootstrap 5** - Framework CSS
+- **pytest** - Testes automatizados
 - **SQLite** - Banco de dados
 
 ## 🚀 Como Executar o Projeto
@@ -72,8 +77,70 @@ python manage.py runserver
 
 7. Acesse no navegador:
 ```
+# Interface Web
 http://localhost:8000
+
+# Documentação da API
+http://localhost:8000/api/v1/docs/
 ```
+
+## 🌐 API REST
+
+O projeto disponibiliza uma API REST completa para integração com outros sistemas.
+
+### Endpoints Disponíveis
+
+**Base URL:** `http://localhost:8000/api/v1/`
+
+| Endpoint | Método | Descrição | Parâmetros |
+|----------|--------|-----------|------------|
+| `/api/v1/` | GET | Informações da API | - |
+| `/api/v1/generate/person/` | GET | Gerar pessoas | `quantity` (1-1000), `export_format` (json/csv) |
+| `/api/v1/generate/company/` | GET | Gerar empresas | `quantity` (1-1000), `export_format` (json/csv) |
+| `/api/v1/docs/` | GET | Documentação Swagger | - |
+| `/api/v1/redoc/` | GET | Documentação ReDoc | - |
+| `/api/v1/schema/` | GET | Schema OpenAPI | - |
+
+### Exemplos de Uso
+
+**Gerar 10 pessoas (JSON):**
+```bash
+curl "http://localhost:8000/api/v1/generate/person/?quantity=10"
+```
+
+**Gerar 5 empresas (CSV):**
+```bash
+curl "http://localhost:8000/api/v1/generate/company/?quantity=5&export_format=csv" -o empresas.csv
+```
+
+**Resposta JSON (exemplo):**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "nome_completo": "João Silva",
+      "cpf": "123.456.789-00",
+      "email": "joao@email.com",
+      "telefone_fixo": "(11) 1234-5678",
+      "endereco": {
+        "cidade": "São Paulo",
+        "estado": "SP"
+      }
+    }
+  ],
+  "total": 1,
+  "message": "1 pessoa(s) gerada(s) com sucesso"
+}
+```
+
+### Rate Limiting
+
+A API possui limite de **100 requisições por hora** para usuários não autenticados.
+
+### Documentação Interativa
+
+Acesse `/api/v1/docs/` para testar os endpoints diretamente no navegador com a interface Swagger.
 
 ## 📦 Estrutura do Projeto
 
@@ -81,11 +148,9 @@ http://localhost:8000
 fake-data-generator/
 ├── config/                 # Configurações do Django
 ├── generator/              # App principal
+│   ├── generators/         # Geradores de dados
 │   ├── exporters/         # Exportadores (JSON, CSV)
-│   ├── generators/        # Geradores de dados
 │   ├── templates/         # Templates HTML
-│   ├── migrations/        # Migrações
-│   ├── tests/             # Testes automatizados
 │   └── views.py           # Views
 ├── static/                # Arquivos estáticos
 ├── manage.py
@@ -119,6 +184,7 @@ O projeto mantém **alta cobertura de testes** (85%+), testando:
 - ✅ Geradores de dados (PersonGenerator, CompanyGenerator)
 - ✅ Exportadores (JSON, CSV)
 - ✅ Views e integrações
+- ✅ API REST (endpoints, validações, formatos)
 - ✅ Validações e casos de erro
 
 ### Estrutura de Testes
@@ -127,7 +193,8 @@ O projeto mantém **alta cobertura de testes** (85%+), testando:
 generator/tests/
 ├── test_generators.py    # Testes dos geradores
 ├── test_exporters.py     # Testes dos exportadores
-└── test_views.py         # Testes das views
+├── test_views.py         # Testes das views
+└── test_api.py           # Testes da API REST
 ```
 
 ## 🎯 Roadmap
@@ -138,19 +205,22 @@ generator/tests/
 - [x] Exportação JSON/CSV
 - [x] Interface básica
 - [x] Testes automatizados (85%+ cobertura)
+- [x] API REST v1
+- [x] Documentação interativa (Swagger/ReDoc)
 
 ### V1 (Próximas funcionalidades)
-- [ ] API REST
 - [ ] Mais tipos de dados (produtos, transações)
+- [ ] Autenticação JWT na API
 - [ ] Templates customizáveis
 - [ ] Histórico de gerações
 - [ ] CI/CD (GitHub Actions)
+- [ ] Deploy em produção
 
 ### V2 (Futuro)
-- [ ] Autenticação de usuários
+- [ ] Autenticação de usuários na interface
 - [ ] Dashboard com estatísticas
 - [ ] Geração em lote/agendada
-
+- [ ] Webhooks
 
 ## 👩‍💻 Autora
 
