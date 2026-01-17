@@ -8,6 +8,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 from drf_spectacular.types import OpenApiTypes
 
 from generator.generators import PersonGenerator, CompanyGenerator
+from generator.external import PokemonGenerator, DogGenerator
 from generator.exporters import JSONExporter, CSVExporter
 from .serializers import (
     GenerateDataSerializer,
@@ -172,4 +173,93 @@ class APIRootView(APIView):
                 'schema': request.build_absolute_uri('/api/v1/schema/'),
             },
             'documentation': 'Acesse /api/v1/docs/ para ver a documentação completa',
+        })
+        
+        
+class GeneratePokemonAPIView(APIView):
+    """API para gerar dados de Pokémons usando a PokéAPI."""
+    
+    @extend_schema(
+        summary="Gerar dados de Pokémons",
+        description="Gera dados de Pokémons aleatórios usando a PokéAPI com informações completas",
+        parameters=[
+            OpenApiParameter(
+                name='quantity',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description='Quantidade de Pokémons a gerar (1-100)',
+                required=False,
+                default=10
+            ),
+            OpenApiParameter(
+                name='generation',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description='Geração específica (1-9) ou deixe vazio para todas',
+                required=False
+            ),
+        ],
+        responses={200: GeneratedDataResponseSerializer},
+        tags=['APIs Externas']
+    )
+    def get(self, request):
+        """Endpoint GET para gerar Pokémons."""
+        quantity = int(request.query_params.get('quantity', 10))
+        generation = request.query_params.get('generation')
+        
+        if quantity < 1 or quantity > 100:
+            return Response(
+                {'error': 'A quantidade deve ser entre 1 e 100'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        generator = PokemonGenerator(generation=int(generation) if generation else None)
+        data = generator.generate(quantity=quantity)
+        
+        return Response({
+            'success': True,
+            'data': data,
+            'total': len(data),
+            'message': f'{len(data)} Pokémon(s) gerado(s) com sucesso',
+            'fonte': 'PokéAPI (pokeapi.co)'
+        })
+        
+class GenerateDogAPIView(APIView):
+    """API para gerar dados de cachorros usando Dog CEO API."""
+    
+    @extend_schema(
+        summary="Gerar dados de cachorros",
+        description="Gera dados de cachorros com fotos reais usando Dog CEO API",
+        parameters=[
+            OpenApiParameter(
+                name='quantity',
+                type=OpenApiTypes.INT,
+                location=OpenApiParameter.QUERY,
+                description='Quantidade de cachorros a gerar (1-100)',
+                required=False,
+                default=10
+            ),
+        ],
+        responses={200: GeneratedDataResponseSerializer},
+        tags=['APIs Externas']
+    )
+    def get(self, request):
+        """Endpoint GET para gerar cachorros."""
+        quantity = int(request.query_params.get('quantity', 10))
+        
+        if quantity < 1 or quantity > 100:
+            return Response(
+                {'error': 'A quantidade deve ser entre 1 e 100'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        generator = DogGenerator()
+        data = generator.generate(quantity=quantity)
+        
+        return Response({
+            'success': True,
+            'data': data,
+            'total': len(data),
+            'message': f'{len(data)} cachorro(s) gerado(s) com sucesso',
+            'fonte': 'Dog CEO API (dog.ceo)'
         })

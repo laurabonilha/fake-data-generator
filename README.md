@@ -4,7 +4,7 @@ Gerador de dados fake para testes e desenvolvimento, criado com Django e Python.
 
 ## 📋 Sobre o Projeto
 
-O Fake Data Generator é uma ferramenta web que permite gerar dados realistas de pessoas e empresas brasileiras para uso em ambientes de desenvolvimento e testes. Os dados podem ser exportados em formatos JSON e CSV.
+O Fake Data Generator é uma ferramenta web que permite gerar dados realistas para uso em ambientes de desenvolvimento e testes. Os dados podem ser exportados em formatos JSON e CSV.
 
 ## ✨ Funcionalidades
 
@@ -14,8 +14,9 @@ O Fake Data Generator é uma ferramenta web que permite gerar dados realistas de
 - ✅ Preview dos dados antes do download
 - ✅ Geração de até 1000 registros por vez
 - ✅ Interface responsiva e intuitiva
-- ✅ **API REST com documentação interativa**
-- ✅ **Rate limiting e validações**
+- ✅ API REST com documentação interativa
+- ✅ Rate limiting e validações
+- ✅ Integração com APIs externas
 
 ## 🛠️ Tecnologias Utilizadas
 
@@ -97,9 +98,23 @@ O projeto disponibiliza uma API REST completa para integração com outros siste
 | `/api/v1/` | GET | Informações da API | - |
 | `/api/v1/generate/person/` | GET | Gerar pessoas | `quantity` (1-1000), `export_format` (json/csv) |
 | `/api/v1/generate/company/` | GET | Gerar empresas | `quantity` (1-1000), `export_format` (json/csv) |
+| `/api/v1/generate/pokemon/` | GET | Gerar Pokemons | `quantity` (1-1010) | `generation` (1-9) |
+| `/api/v1/generate/dog/` | GET | Gerar Cães | `quantity` (1-1000) |
 | `/api/v1/docs/` | GET | Documentação Swagger | - |
 | `/api/v1/redoc/` | GET | Documentação ReDoc | - |
 | `/api/v1/schema/` | GET | Schema OpenAPI | - |
+
+## 📡 Integrações com APIs Externas
+
+A API integra serviços externos para geração de dados fake:
+
+- **PokéAPI**  
+  Endpoint: `/api/v1/generate/pokemon/`  
+  https://pokeapi.co
+
+- **Dog CEO API**  
+  Endpoint: `/api/v1/generate/dog/`  
+  https://dog.ceo/dog-api/
 
 ### Exemplos de Uso
 
@@ -148,11 +163,13 @@ Acesse `/api/v1/docs/` para testar os endpoints diretamente no navegador com a i
 fake-data-generator/
 ├── config/                 # Configurações do Django
 ├── generator/              # App principal
+│   ├── api/                # Configurações da API
 │   ├── generators/         # Geradores de dados
-│   ├── exporters/         # Exportadores (JSON, CSV)
-│   ├── templates/         # Templates HTML
-│   └── views.py           # Views
-├── static/                # Arquivos estáticos
+│   ├── exporters/          # Exportadores (JSON, CSV)
+│   ├── external/           # Integrações com API externas
+│   ├── templates/          # Templates HTML
+│   └── views.py            # Views
+├── static/                 # Arquivos estáticos
 ├── manage.py
 ├── requirements.txt
 └── README.md

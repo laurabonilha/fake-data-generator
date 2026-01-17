@@ -2,7 +2,7 @@
 """URLs da API REST."""
 from django.urls import path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-from .views import GeneratePersonAPIView, GenerateCompanyAPIView, APIRootView
+from .views import GeneratePersonAPIView, GenerateCompanyAPIView, APIRootView, GeneratePokemonAPIView, GenerateDogAPIView
 
 app_name = 'api'
 
@@ -13,6 +13,11 @@ urlpatterns = [
     # Endpoints de geração
     path('generate/person/', GeneratePersonAPIView.as_view(), name='generate-person'),
     path('generate/company/', GenerateCompanyAPIView.as_view(), name='generate-company'),
+    
+    # Endpoints de geração - APIs Externas
+    path('generate/pokemon/', GeneratePokemonAPIView.as_view(), name='generate-pokemon'),
+    path('generate/dog/', GenerateDogAPIView.as_view(), name='generate-dog'),
+    
     
     # Documentação da API
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
