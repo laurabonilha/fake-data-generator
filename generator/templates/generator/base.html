@@ -1,62 +1,113 @@
 <!-- generator/templates/generator/base.html -->
+{% load static %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Fake Data Generator{% endblock %}</title>
+    
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        main {
-            flex: 1;
-        }
-        .navbar-brand {
-            font-weight: bold;
-        }
-        footer {
-            margin-top: auto;
-        }
-    </style>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Base CSS -->
+    <link rel="stylesheet" href="{% static 'css/generator/base.css' %}">
+    
+    <!-- Page-specific CSS -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <!-- Navbar Premium -->
+    <nav class="navbar navbar-expand-lg navbar-premium">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'generator:home' %}">🎲 Fake Data Generator</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand-custom" href="{% url 'generator:home' %}">
+                <div class="brand-icon">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <span>Fake Data Generator</span>
+            </a>
+            
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs
                 <span class="navbar-toggler-icon"></span>
             </button>
+            
             <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
+                <ul class="navbar-nav navbar-nav-custom ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'generator:home' %}">Início</a>
+                        <a class="nav-link-custom {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
+                           href="{% url 'generator:home' %}">
+                            <i class="fas fa-home"></i>
+                            Início
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'generator:about' %}">Sobre</a>
+                        <a class="nav-link-custom {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
+                           href="{% url 'generator:about' %}">
+                            <i class="fas fa-info-circle"></i>
+                            Sobre
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main class="py-5">
+    <!-- Main Content -->
+    <main>
         <div class="container">
             {% block content %}{% endblock %}
         </div>
     </main>
 
-    <footer class="bg-light py-4 mt-5">
-        <div class="container text-center text-muted">
-            <p class="mb-0">Desenvolvido com ❤️ usando Django e Faker</p>
+    <!-- Footer Premium -->
+    <footer class="footer-premium">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="footer-bran">
+                        <i class="fas fa-dice"></i>
+                    </div>
+                    <span class="footer-brand-text">Fake Data Generator</span>
+                </div>
+
+                <p class="footer-description">
+                    Ferramenta profissional para geração de dados realistas. 
+                    Perfeita para desenvolvimento, testes e prototipagem.
+                </p>
+
+                <div class="footer-tech-stack">
+                    <span class="tech-badge">
+                        <i class="fab fa-python"></i> Django
+                    </span>
+                    <span class="tech-badge">
+                        <i class="fas fa-random"></i> Faker
+                    </span>
+                    <span class="tech-badge">
+                        <i class="fab fa-bootstrap"></i> Bootstrap
+                    </span>
+                    <span class="tech-badge">
+                        <i class="fab fa-js"></i> JavaScript
+                    </span>
+                </div>
+
+                <div class="footer-div</div>
+
+                <div class="footer-bottom">
+                    <span>Desenvolvido com</span>
+                    <i class="fas fa-heart footer-heart"></i>
+                    <span>usando Django e Faker</span>
+                </div>
+            </div>
         </div>
     </footer>
 
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Page-specific JS -->
     {% block extra_js %}{% endblock %}
 </body>
 </html>

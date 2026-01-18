@@ -98,7 +98,7 @@ O projeto disponibiliza uma API REST completa para integração com outros siste
 | `/api/v1/` | GET | Informações da API | - |
 | `/api/v1/generate/person/` | GET | Gerar pessoas | `quantity` (1-1000), `export_format` (json/csv) |
 | `/api/v1/generate/company/` | GET | Gerar empresas | `quantity` (1-1000), `export_format` (json/csv) |
-| `/api/v1/generate/pokemon/` | GET | Gerar Pokemons | `quantity` (1-1010) | `generation` (1-9) |
+| `/api/v1/generate/pokemon/` | GET | Gerar Pokemons | `quantity` (1-1010), `generation` (opcional - geração de 1-9) |
 | `/api/v1/generate/dog/` | GET | Gerar Cães | `quantity` (1-1000) |
 | `/api/v1/docs/` | GET | Documentação Swagger | - |
 | `/api/v1/redoc/` | GET | Documentação ReDoc | - |

@@ -1,64 +1,168 @@
 <!-- generator/templates/generator/about.html -->
 {% extends 'generator/base.html' %}
+{% load static %}
 
 {% block title %}Sobre - Fake Data Generator{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/generator/about.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="row">
-    <div class="col-lg-8 mx-auto">
-        <h1 class="mb-4">Sobre o Projeto</h1>
-        
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>🎯 Objetivo</h3>
-                <p>
-                    O <strong>Fake Data Generator</strong> é uma ferramenta desenvolvida para auxiliar 
-                    desenvolvedores e testadores a gerar dados realistas para ambientes de desenvolvimento 
-                    e testes.
-                </p>
+    <div class="col-lg-10 mx-auto">
+        <!-- Hero Section -->
+        <div class="about-hero">
+            <div class="about-icon">
+                <i class="fas fa-info-circle"></i>
+            </div>
+            <h1 class="about-title">Sobre o Projeto</h1>
+            <p class="about-subtitle">
+                Uma ferramenta poderosa e intuitiva para geração de dados realistas, 
+                projetada para desenvolvedores e testadores exigentes.
+            </p>
+        </div>
+
+        <!-- Stats -->
+        <div class="stats-section">
+            <div class="stat-card">
+                <span class="stat-number">4</span>
+                <span class="stat-label">Tipos de Dados</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">1000+</span>
+                <span class="stat-label">Registros por Vez</span>
+            </div>
+            <div class="stat-card">
+                <span class="stat-number">3</span>
+                <span class="stat-label">Formatos de Exportação</span>
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>🚀 Funcionalidades</h3>
-                <ul>
-                    <li>Geração de dados de pessoas (nome, CPF, email, telefone, endereço)</li>
-                    <li>Geração de dados de empresas (CNPJ, razão social, contatos)</li>
-                    <li>Exportação em múltiplos formatos (JSON, CSV)</li>
-                    <li>Preview dos dados antes do download</li>
-                    <li>Geração de até 1000 registros por vez</li>
-                </ul>
+        <!-- Objetivo -->
+        <div class="about-card">
+            <div class="card-header-custom">
+                <div class="card-icon">🎯</div>
+                <h2 class="card-title-custom">Objetivo</h2>
             </div>
+            <p>
+                O <strong>Fake Data Generator</strong> é uma ferramenta profissional desenvolvida 
+                para auxiliar desenvolvedores e testadores a gerar dados realistas para ambientes 
+                de desenvolvimento, testes automatizados e prototipagem. Com foco em dados brasileiros 
+                autênticos, oferecemos CPF, CNPJ, CEP e outros dados formatados corretamente.
+            </p>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-body">
-                <h3>🛠️ Tecnologias</h3>
-                <div class="row">
-                    <div class="col-md-6">
-                        <ul>
-                            <li><strong>Django:</strong> Framework web Python</li>
-                            <li><strong>Faker:</strong> Biblioteca de geração de dados</li>
-                            <li><strong>Bootstrap:</strong> Framework CSS</li>
-                        </ul>
+        <!-- Funcionalidades -->
+        <div class="about-card">
+            <div class="card-header-custom">
+                <div class="card-icon">🚀</div>
+                <h2 class="card-title-custom">Funcionalidades</h2>
+            </div>
+            <ul class="feature-list">
+                <li>
+                    <span><strong>Dados de Pessoas:</strong> Geração completa com nome, CPF válido, email, telefone e endereço brasileiro</span>
+                </li>
+                <li>
+                    <span><strong>Dados de Empresas:</strong> CNPJ válido, razão social, nome fantasia e informações de contato</span>
+                </li>
+                <li>
+                    <span><strong>Dados com Imagens:</strong> Pokémons e cachorros com URLs de imagens reais</span>
+                </li>
+                <li>
+                    <span><strong>Múltiplos Formatos:</strong> Exportação em JSON, CSV ou visualização direta no navegador</span>
+                </li>
+                <li>
+                    <span><strong>Alto Volume:</strong> Geração de até 1000 registros textuais ou 100 com imagens por requisição</span>
+                </li>
+                <li>
+                    <span><strong>Interface Moderna:</strong> Design responsivo e intuitivo para melhor experiência do usuário</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Tecnologias -->
+        <div class="about-card">
+            <div class="card-header-custom">
+                <div class="card-icon">🛠️</div>
+                <h2 class="card-title-custom">Tecnologias</h2>
+            </div>
+            <div class="tech-grid">
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fab fa-python" style="color: #3776ab;"></i>
                     </div>
-                    <div class="col-md-6">
-                        <ul>
-                            <li><strong>Python:</strong> Linguagem de programação</li>
-                            <li><strong>SQLite:</strong> Banco de dados</li>
-                            <li><strong>JavaScript:</strong> Interatividade do frontend</li>
-                        </ul>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">Django</div>
+                        <div class="tech-item-desc">Framework web Python</div>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fas fa-random" style="color: #667eea;"></i>
+                    </div>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">Faker</div>
+                        <div class="tech-item-desc">Geração de dados</div>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fab fa-bootstrap" style="color: #7952b3;"></i>
+                    </div>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">Bootstrap</div>
+                        <div class="tech-item-desc">Framework CSS</div>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fab fa-js" style="color: #f7df1e;"></i>
+                    </div>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">JavaScript</div>
+                        <div class="tech-item-desc">Interatividade frontend</div>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fas fa-database" style="color: #003b57;"></i>
+                    </div>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">SQLite</div>
+                        <div class="tech-item-desc">Banco de dados</div>
+                    </div>
+                </div>
+
+                <div class="tech-item">
+                    <div class="tech-item-icon">
+                        <i class="fab fa-font-awesome" style="color: #339af0;"></i>
+                    </div>
+                    <div class="tech-item-content">
+                        <div class="tech-item-title">Font Awesome</div>
+                        <div class="tech-item-desc">Ícones vetoriais</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="card">
-            <div class="card-body">
-                <h3>📝 Versão</h3>
-                <p class="mb-0">
-                    <strong>V0.1.0</strong> - Versão inicial do projeto com funcionalidades básicas.
+        <!-- Versão -->
+        <div class="about-card">
+            <div class="card-header-custom">
+                <div class="card-icon">📝</div>
+                <h2 class="card-title-custom">Versão Atual</h2>
+            </div>
+            <div class="text-center">
+                <div class="version-badge">
+                    <i class="fas fa-code-branch"></i>
+                    <span>v2.0.0</span>
+                </div>
+                <p class="mt-3 mb-0" style="color: var(--text-secondary);">
+                    Versão premium com design moderno, suporte a imagens e melhorias de performance
                 </p>
             </div>
         </div>

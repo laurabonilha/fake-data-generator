@@ -1,152 +1,303 @@
 <!-- generator/templates/generator/home.html -->
 {% extends 'generator/base.html' %}
+{% load static %}
 
 {% block title %}Home - Fake Data Generator{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/generator/styles.css' %}">
+
+{% endblock %}
+
 {% block content %}
-<div class="row">
-    <div class="col-lg-8 mx-auto">
-        <div class="text-center mb-5">
-            <h1 class="display-4">Gerador de Dados Fake</h1>
-            <p class="lead text-muted">Gere dados realistas para testes e desenvolvimento</p>
+<!-- Hero Section com Gradiente -->
+<div class="hero-section">
+    <div class="hero-content">
+        <div class="hero-badge">
+            <i class="fas fa-sparkles"></i>
+            <span>Gerador Profissional v2.0</span>
         </div>
-
-        <div class="card shadow">
-            <div class="card-body p-4">
-                <form id="generatorForm">
-                    <div class="mb-3">
-                        <label for="dataType" class="form-label fw-bold">Tipo de Dado</label>
-                        <select class="form-select" id="dataType" name="data_type">
-                            <option value="person">👤 Pessoas</option>
-                            <option value="company">🏢 Empresas</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label fw-bold">Quantidade</label>
-                        <input 
-                            type="number" 
-                            class="form-control" 
-                            id="quantity" 
-                            name="quantity" 
-                            min="1" 
-                            max="1000" 
-                            value="10"
-                        >
-                        <small class="text-muted">Mínimo: 1 | Máximo: 1000</small>
-                    </div>
-
-                    <div class="mb-4">
-                        <label class="form-label fw-bold">Formato de Exportação</label>
-                        <div class="btn-group w-100" role="group">
-                            <input type="radio" class="btn-check" name="export_format" id="preview" value="preview" checked>
-                            <label class="btn btn-outline-primary" for="preview">👁️ Visualizar</label>
-
-                            <input type="radio" class="btn-check" name="export_format" id="json" value="json">
-                            <label class="btn btn-outline-primary" for="json">📄 JSON</label>
-
-                            <input type="radio" class="btn-check" name="export_format" id="csv" value="csv">
-                            <label class="btn btn-outline-primary" for="csv">📊 CSV</label>
-                        </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-lg w-100">
-                        🎲 Gerar Dados
-                    </button>
-                </form>
-
-                <div id="result" class="mt-4" style="display: none;">
-                    <hr>
-                    <div id="alertContainer"></div>
-                    <div id="previewContainer"></div>
+        <h1 class="hero-title">
+            Gerador de Dados <span class="gradient-text">Inteligente</span>
+        </h1>
+        <p class="hero-subtitle">
+            Crie dados realistas em segundos para seus projetos de desenvolvimento e testes
+        </p>
+        <div class="hero-stats">
+            <div class="stat-item">
+                <i class="fas fa-database"></i>
+                <div class="stat-content">
+                    <strong>4 Tipos</strong>
+                    <span>de dados</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-bolt"></i>
+                <div class="stat-content">
+                    <strong>Instantâneo</strong>
+                    <span>geração rápida</span>
+                </div>
+            </div>
+            <div class="stat-item">
+                <i class="fas fa-file-export"></i>
+                <div class="stat-content">
+                    <strong>3 Formatos</strong>
+                    <span>de exportação</span>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="hero-decoration">
+        <div class="floating-element element-1"></div>
+        <div class="floating-element element-2"></div>
+        <div class="floating-element element-3"></div>
+    </div>
+</div>
 
-        <div class="mt-4 text-center">
-            <p class="text-muted">
-                <small>💡 Dica: Use esses dados para popular bancos de testes, criar protótipos ou desenvolver APIs.</small>
-            </p>
+<!-- Main Generator Card -->
+<div class="row">
+    <div class="col-lg-10 mx-auto">
+        <div class="generator-card">
+            <!-- Tabs com Ícones Melhorados -->
+            <div class="tabs-container">
+                <div class="nav nav-tabs-custom" id="dataTypeTabs" role="tablist">
+                    <button class="nav-link-custom active" id="text-tab" data-bs-toggle="tab" 
+                            data-bs-target="#text-content" type="button" role="tab">
+                        <div class="tab-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="tab-content-text">
+                            <span class="tab-title">Dados Textuais</span>
+                            <span class="tab-subtitle">JSON & CSV</span>
+                        </div>
+                    </button>
+                    
+                    <button class="nav-link-custom" id="image-tab" data-bs-toggle="tab" 
+                            data-bs-target="#image-content" type="button" role="tab">
+                        <div class="tab-icon">
+                            <i class="fas fa-images"></i>
+                        </div>
+                        <div class="tab-content-text">
+                            <span class="tab-title">Dados com Imagens</span>
+                            <span class="tab-subtitle">Visual & API</span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content p-4" id="dataTypeTabContent">
+                <!-- Aba de Dados Textuais -->
+                <div class="tab-pane fade show active" id="text-content" role="tabpanel">
+                    <form id="textGeneratorForm" class="generator-form">
+                        <div class="form-grid">
+                            <!-- Tipo de Dado -->
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="fas fa-layer-group"></i>
+                                    Tipo de Dado
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="form-select-custom" id="textDataType" name="data_type">
+                                        <option value="person" data-icon="👤">Pessoas Completas</option>
+                                        <option value="company" data-icon="🏢">Empresas Fictícias</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                            </div>
+
+                            <!-- Quantidade -->
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="fas fa-hashtag"></i>
+                                    Quantidade
+                                </label>
+                                <div class="input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        class="form-control-custom" 
+                                        id="textQuantity" 
+                                        name="quantity" 
+                                        min="1" 
+                                        max="1000" 
+                                        value="10"
+                                    >
+                                    <div class="input-range-display">
+                                        <span class="range-min">1</span>
+                                        <span class="range-max">1000</span>
+                                    </div>
+                                </div>
+                                <small class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    Escolha entre 1 e 1000 registros
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Formato de Exportação -->
+                        <div class="form-group-custom mt-4">
+                            <label class="form-label-custom">
+                                <i class="fas fa-download"></i>
+                                Formato de Exportação
+                            </label>
+                            <div class="export-options">
+                                <input type="radio" class="btn-check" name="export_format" 
+                                       id="textPreview" value="preview" checked>
+                                <label class="export-card" for="textPreview">
+                                    <i class="fas fa-eye"></i>
+                                    <span class="export-title">Visualizar</span>
+                                    <span class="export-desc">Preview no navegador</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="export_format" 
+                                       id="textJson" value="json">
+                                <label class="export-card" for="textJson">
+                                    <i class="fas fa-code"></i>
+                                    <span class="export-title">JSON</span>
+                                    <span class="export-desc">Arquivo estruturado</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="export_format" 
+                                       id="textCsv" value="csv">
+                                <label class="export-card" for="textCsv">
+                                    <i class="fas fa-table"></i>
+                                    <span class="export-title">CSV</span>
+                                    <span class="export-desc">Planilha compatível</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-generate">
+                            <span class="btn-text">
+                                <i class="fas fa-magic"></i>
+                                Gerar Dados Agora
+                            </span>
+                            <span class="btn-shimmer"></span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Aba de Dados com Imagens -->
+                <div class="tab-pane fade" id="image-content" role="tabpanel">
+                    <form id="imageGeneratorForm" class="generator-form">
+                        <div class="form-grid">
+                            <!-- Tipo de Dado -->
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="fas fa-layer-group"></i>
+                                    Tipo de Dado
+                                </label>
+                                <div class="select-wrapper">
+                                    <select class="form-select-custom" id="imageDataType" name="data_type">
+                                        <option value="pokemon" data-icon="⚡">Pokémons Aleatórios</option>
+                                        <option value="dog" data-icon="🐕">Cachorros Diversos</option>
+                                    </select>
+                                    <i class="fas fa-chevron-down select-arrow"></i>
+                                </div>
+                            </div>
+
+                            <!-- Quantidade -->
+                            <div class="form-group-custom">
+                                <label class="form-label-custom">
+                                    <i class="fas fa-hashtag"></i>
+                                    Quantidade
+                                </label>
+                                <div class="input-wrapper">
+                                    <input 
+                                        type="number" 
+                                        class="form-control-custom" 
+                                        id="imageQuantity" 
+                                        name="quantity" 
+                                        min="1" 
+                                        max="100" 
+                                        value="6"
+                                    >
+                                    <div class="input-range-display">
+                                        <span class="range-min">1</span>
+                                        <span class="range-max">100</span>
+                                    </div>
+                                </div>
+                                <small class="form-hint">
+                                    <i class="fas fa-info-circle"></i>
+                                    Recomendado até 100 para melhor performance
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Formato de Exportação -->
+                        <div class="form-group-custom mt-4">
+                            <label class="form-label-custom">
+                                <i class="fas fa-download"></i>
+                                Formato de Exportação
+                            </label>
+                            <div class="export-options">
+                                <input type="radio" class="btn-check" name="export_format" 
+                                       id="imagePreview" value="preview" checked>
+                                <label class="export-card" for="imagePreview">
+                                    <i class="fas fa-eye"></i>
+                                    <span class="export-title">Visualizar</span>
+                                    <span class="export-desc">Galeria interativa</span>
+                                </label>
+
+                                <input type="radio" class="btn-check" name="export_format" 
+                                       id="imageJson" value="json">
+                                <label class="export-card" for="imageJson">
+                                    <i class="fas fa-code"></i>
+                                    <span class="export-title">JSON</span>
+                                    <span class="export-desc">Com URLs das imagens</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn-generate">
+                            <span class="btn-text">
+                                <i class="fas fa-images"></i>
+                                Gerar Imagens Agora
+                            </span>
+                            <span class="btn-shimmer"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Área de Resultados -->
+            <div id="result" class="results-section" style="display: none;">
+                <div class="results-divider"></div>
+                <div id="alertContainer"></div>
+                <div id="previewContainer"></div>
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features-grid mt-5">
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <h3 class="feature-title">Rápido & Eficiente</h3>
+                <p class="feature-desc">Gere milhares de registros em segundos com nossa API otimizada</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3 class="feature-title">Dados Realistas</h3>
+                <p class="feature-desc">Informações com formatação brasileira autêntica e validada</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">
+                    <i class="fas fa-sync-alt"></i>
+                </div>
+                <h3 class="feature-title">Múltiplos Formatos</h3>
+                <p class="feature-desc">Exporte em JSON, CSV ou visualize diretamente no navegador</p>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-document.getElementById('generatorForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(e.target);
-    const params = new URLSearchParams(formData);
-    const exportFormat = formData.get('export_format');
-    
-    const resultDiv = document.getElementById('result');
-    const alertContainer = document.getElementById('alertContainer');
-    const previewContainer = document.getElementById('previewContainer');
-    
-    resultDiv.style.display = 'none';
-    alertContainer.innerHTML = '';
-    previewContainer.innerHTML = '';
-    
-    try {
-        const response = await fetch(`/gerar/?${params.toString()}`);
-        
-        if (exportFormat === 'preview') {
-            const data = await response.json();
-            
-            if (data.success) {
-                alertContainer.innerHTML = `
-                    <div class="alert alert-success">
-                        ${data.message}
-                    </div>
-                `;
-                
-                previewContainer.innerHTML = `
-                    <h5>Preview dos dados (${data.data.length} de ${data.total}):</h5>
-                    <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow-y: auto;">${JSON.stringify(data.data, null, 2)}</pre>
-                `;
-                
-                resultDiv.style.display = 'block';
-            } else {
-                alertContainer.innerHTML = `
-                    <div class="alert alert-danger">
-                        Erro: ${data.error}
-                    </div>
-                `;
-                resultDiv.style.display = 'block';
-            }
-        } else {
-            // Download do arquivo
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            
-            const contentDisposition = response.headers.get('content-disposition');
-            const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
-            
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            alertContainer.innerHTML = `
-                <div class="alert alert-success">
-                    Download iniciado! ✅
-                </div>
-            `;
-            resultDiv.style.display = 'block';
-        }
-    } catch (error) {
-        alertContainer.innerHTML = `
-            <div class="alert alert-danger">
-                Erro ao gerar dados: ${error.message}
-            </div>
-        `;
-        resultDiv.style.display = 'block';
-    }
-});
-</script>
+<script src="{% static 'js/generator/home.js' %}"></script>
 {% endblock %}
