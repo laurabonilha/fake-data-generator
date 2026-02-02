@@ -14,46 +14,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- Base CSS -->
-    <link rel="stylesheet" href="{% static 'css/generator/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/generator/base.css' %}?v=4">
     
     <!-- Page-specific CSS -->
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <!-- Navbar Premium -->
-    <nav class="navbar navbar-expand-lg navbar-premium">
-        <div class="container">
-            <a class="navbar-brand-custom" href="{% url 'generator:home' %}">
-                <div class="brand-icon">
-                    <i class="fas fa-dice"></i>
-                </div>
-                <span>Fake Data Generator</span>
-            </a>
-            
-            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav navbar-nav-custom ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link-custom {% if request.resolver_match.url_name == 'home' %}active{% endif %}" 
-                           href="{% url 'generator:home' %}">
-                            <i class="fas fa-home"></i>
-                            Início
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link-custom {% if request.resolver_match.url_name == 'about' %}active{% endif %}" 
-                           href="{% url 'generator:about' %}">
-                            <i class="fas fa-info-circle"></i>
-                            Sobre
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    {% include 'generator/includes/navbar.html' %}
 
     <!-- Main Content -->
     <main>
@@ -93,7 +60,7 @@
                     </span>
                 </div>
 
-                <div class="footer-div</div>
+                <div class="footer-divider"></div>
 
                 <div class="footer-bottom">
                     <span>Desenvolvido com</span>

@@ -1,0 +1,34 @@
+    <!-- Navbar Premium -->
+    <nav class="navbar navbar-expand-lg navbar-premium">
+        <div class="container">
+            <a class="navbar-brand-custom" href="{% url 'generator:home' %}">
+                <div class="brand-icon">
+                    <i class="fas fa-dice"></i>
+                </div>
+                <span>Fake Data Generator</span>
+            </a>
+            
+            <button class="navbar-toggler navbar-toggler-custom" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav navbar-nav-custom ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link-custom" 
+                           href="{% url 'generator:home' %}">
+                            <i class="fas fa-home"></i>
+                            Início
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link-custom" 
+                           href="{% url 'generator:about' %}">
+                            <i class="fas fa-info-circle"></i>
+                            Sobre
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
