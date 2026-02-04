@@ -18,25 +18,32 @@ function renderTextPreview(data) {
 function renderImagePreview(data, dataType) {
     const items = data.data.map(item => {
         if (dataType === 'pokemon') {
+            const placeholder = 'https://via.placeholder.com/150?text=No+Image';
+            const imageUrl = (item.imagens && (item.imagens.oficial || item.imagens.frente)) || placeholder;
             return `
                 <div class="image-card">
-                    <img src="${item.image_url || item.sprite}" alt="${item.name}" 
-                         onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                    <div class="image-card-title">${item.name}</div>
+                    <img src="${imageUrl}" alt="${item.nome}" 
+                         onerror="this.src='${placeholder}'">
+                    <div class="image-card-title">${item.nome}</div>
                     <div class="image-card-subtitle">
-                        ${item.types ? item.types.join(', ') : ''}
-                        ${item.id ? `#${item.id}` : ''}
+                        ${item.tipos ? item.tipos.join(', ') : ''}
+                        <br>
+                        <small>Gen ${item.geracao}</small>
                     </div>
                 </div>
             `;
         } else if (dataType === 'dog') {
+            const placeholder = 'https://via.placeholder.com/150?text=No+Image';
+            const imageUrl = item.fotos || placeholder;
             return `
                 <div class="image-card">
-                    <img src="${item.image_url}" alt="${item.breed || 'Dog'}" 
-                         onerror="this.src='https://via.placeholder.com/150?text=No+Image'">
-                    <div class="image-card-title">${item.breed || 'Random Dog'}</div>
+                    <img src="${imageUrl}" alt="${item.raca || 'Dog'}" 
+                         onerror="this.src='${placeholder}'">
+                    <div class="image-card-title">${item.nome}</div>
                     <div class="image-card-subtitle">
-                        ${item.sub_breed ? item.sub_breed : 'Mixed'}
+                        ${item.raca}
+                        <br>
+                        <small>${item.idade} anos • ${item.genero}</small>
                     </div>
                 </div>
             `;
@@ -63,42 +70,42 @@ function renderImagePreview(data, dataType) {
  */
 async function handleFormSubmit(e, isImageData = false) {
     e.preventDefault();
-    
+
     const formData = new FormData(e.target);
     const params = new URLSearchParams(formData);
     const exportFormat = formData.get('export_format');
     const dataType = formData.get('data_type');
-    
+
     const resultDiv = document.getElementById('result');
     const alertContainer = document.getElementById('alertContainer');
     const previewContainer = document.getElementById('previewContainer');
-    
+
     // Mostra mensagem de carregamento
     resultDiv.style.display = 'none';
     alertContainer.innerHTML = '<div class="alert alert-info">Gerando dados...</div>';
     resultDiv.style.display = 'block';
     previewContainer.innerHTML = '';
-    
+
     try {
         const response = await fetch(`/gerar/?${params.toString()}`);
-        
+
         if (exportFormat === 'preview') {
             const data = await response.json();
-            
+
             if (data.success) {
                 alertContainer.innerHTML = `
                     <div class="alert alert-success">
                         ${data.message}
                     </div>
                 `;
-                
+
                 // Renderiza preview baseado no tipo de dado
                 if (isImageData) {
                     previewContainer.innerHTML = renderImagePreview(data, dataType);
                 } else {
                     previewContainer.innerHTML = renderTextPreview(data);
                 }
-                
+
                 resultDiv.style.display = 'block';
             } else {
                 alertContainer.innerHTML = `
@@ -114,16 +121,16 @@ async function handleFormSubmit(e, isImageData = false) {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            
+
             const contentDisposition = response.headers.get('content-disposition');
             const filename = contentDisposition.split('filename=')[1].replace(/"/g, '');
-            
+
             a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
-            
+
             alertContainer.innerHTML = `
                 <div class="alert alert-success">
                     Download iniciado! ✅
@@ -145,7 +152,7 @@ async function handleFormSubmit(e, isImageData = false) {
 // INICIALIZAÇÃO DOS EVENT LISTENERS
 // ============================================================================
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Listener para formulário de dados textuais
     const textForm = document.getElementById('textGeneratorForm');
     if (textForm) {
@@ -185,7 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Adicione efeito de loading nos botões
     document.querySelectorAll('.btn-generate').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function () {
             this.classList.add('loading');
             setTimeout(() => {
                 this.classList.remove('loading');
