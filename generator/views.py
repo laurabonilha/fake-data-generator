@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import JsonResponse
 from .generators import PersonGenerator, CompanyGenerator
+from generator.external import PokemonGenerator, DogGenerator
 from .exporters import JSONExporter, CSVExporter
 
 
@@ -37,6 +38,14 @@ def generate_data(request):
         generator = CompanyGenerator()
         data = generator.generate(quantity)
         filename = f'empresas_{quantity}.{export_format}'
+    elif data_type == 'pokemon':
+        generator = PokemonGenerator()
+        data = generator.generate(quantity)
+        filename = f'pokemons_{quantity}.{export_format}'
+    elif data_type == 'dog':
+        generator = DogGenerator()
+        data = generator.generate(quantity)
+        filename = f'cachorros_{quantity}.{export_format}'
     else:
         return JsonResponse({
             'error': 'Tipo de dado inválido'
