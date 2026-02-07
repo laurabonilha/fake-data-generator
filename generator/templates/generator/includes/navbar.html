@@ -15,19 +15,43 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav navbar-nav-custom ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link-custom" 
-                           href="{% url 'generator:home' %}">
-                            <i class="fas fa-home"></i>
-                            Início
+                        <a class="nav-link-custom" href="{% url 'generator:home' %}">
+                            <i class="fas fa-home"></i> Início
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link-custom" 
-                           href="{% url 'generator:about' %}">
-                            <i class="fas fa-info-circle"></i>
-                            Sobre
+                        <a class="nav-link-custom" href="{% url 'generator:about' %}">
+                            <i class="fas fa-info-circle"></i> Sobre
                         </a>
                     </li>
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link-custom dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fas fa-user-circle"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="userDropdown">
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="fas fa-sign-out-alt me-2"></i>Sair
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link-custom" href="{% url 'login' %}">
+                                <i class="fas fa-sign-in-alt"></i> Entrar
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link-custom active" href="{% url 'register' %}">
+                                <i class="fas fa-user-plus"></i> Criar Conta
+                            </a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>

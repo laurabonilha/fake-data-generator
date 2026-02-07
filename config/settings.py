@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     # Apps do projeto
     'generator',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -171,3 +172,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://localhost:8000",
     "http://127.0.0.1:8000",
 ]
+
+LOGIN_REDIRECT_URL = 'generator:home'
+LOGOUT_REDIRECT_URL = 'generator:home'
