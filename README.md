@@ -4,47 +4,64 @@ Gerador de dados fake para testes e desenvolvimento, criado com Django e Python.
 
 ## 📋 Sobre o Projeto
 
-O Fake Data Generator é uma ferramenta web que permite gerar dados realistas para uso em ambientes de desenvolvimento e testes. Os dados podem ser exportados em formatos JSON e CSV.
+O **Fake Data Generator** é uma ferramenta web robusta desenvolvida para simplificar a criação de dados realistas para ambientes de desenvolvimento, QA e testes de software. O projeto evoluiu para uma plataforma completa com sistema de usuários e rastreamento de histórico.
 
 ## ✨ Funcionalidades
 
-- ✅ Geração de dados de pessoas (nome, CPF, email, telefone, endereço)
-- ✅ Geração de dados de empresas (CNPJ, razão social, contatos)
-- ✅ Exportação em JSON e CSV
-- ✅ Preview dos dados antes do download
-- ✅ Geração de até 1000 registros por vez
-- ✅ Interface responsiva e intuitiva
-- ✅ API REST com documentação interativa
-- ✅ Rate limiting e validações
-- ✅ Integração com APIs externas
+### 🔐 Autenticação e Usuários
+- **Cadastro e Login**: Sistema seguro usando o *Django Auth System*.
+- **Gestão de Sessão**: Controle de acesso para funcionalidades exclusivas.
+- **Interface Premium**: Telas de login e cadastro integradas ao design system do projeto.
 
-## 🛠️ Tecnologias Utilizadas
+### 📜 Histórico de Gerações
+- **Tracking Automático**: Registra todas as operações de geração feitas por usuários logados.
+- **Detalhamento**: Salva tipo de dado, quantidade, data/hora e formato de saída (JSON/CSV/Preview).
+- **Dashboard Pessoal**: Tela exclusiva para cada usuário visualizar seus registros passados.
 
-- **Python 3.11+**
-- **Django 5.0**
-- **Django REST Framework** - API REST
-- **drf-spectacular** - Documentação OpenAPI/Swagger
-- **Faker** - Geração de dados fake
-- **Bootstrap 5** - Framework CSS
-- **pytest** - Testes automatizados
-- **SQLite** - Banco de dados
+### 🏭 Geradores de Dados
+- ✅ **Pessoas**: Nome completo, CPF, RG, email, telefone, endereço completo.
+- ✅ **Empresas**: CNPJ, razão social, nome fantasia, contatos.
+- ✅ **Integrações Externas**:
+  - **PokéAPI**: Dados reais de Pokémons com stats e imagens.
+  - **Dog API**: Raças e imagens de cães.
+
+### 📤 Exportação e Formatos
+- **Preview em Tempo Real**: Visualize os dados na tela antes de baixar.
+- **JSON**: Estrutura limpa e pronta para uso em APIs.
+- **CSV**: Ideal para importação em planilhas e bancos de dados.
+
+## 🛠️ Arquitetura
+
+O projeto segue a arquitetura **MVT (Model-View-Template)** do Django, com forte separação de responsabilidades em múltiplos apps:
+
+1.  **`generator` (Core):** Responsável pela lógica de negócios dos geradores (Design Pattern *Strategy* para os exporters).
+2.  **`accounts`:** Gerencia todo o fluxo de autenticação, formulários customizados e sessões.
+3.  **`history`:** Implementa a persistência de dados e consultas filtradas por usuário (Row-level security).
+
+### Tecnologias e Bibliotecas
+- **Python 3.11+** & **Django 5.0**
+- **Django REST Framework** & **drf-spectacular** (Documentação automática)
+- **Faker**: Geração de dados dummy local.
+- **Requests**: Consumo de APIs externas.
+- **Bootstrap 5 & FontAwesome**: Frontend responsivo e moderno.
+- **pytest**: Bateria de testes automatizados com cobertura >85%.
+- **SQLite**: Banco de dados (migrável para PostgreSQL/MySQL facilmente).
 
 ## 🚀 Como Executar o Projeto
 
 ### Pré-requisitos
-
 - Python 3.11 ou superior
 - pip (gerenciador de pacotes Python)
 
 ### Passo a Passo
 
-1. Clone o repositório:
+1. **Clone o repositório:**
 ```bash
 git clone https://github.com/laurabonilha/fake-data-generator.git
 cd fake-data-generator
 ```
 
-2. Crie e ative o ambiente virtual:
+2. **Crie e ative o ambiente virtual:**
 ```bash
 # Linux/Mac
 python -m venv venv
@@ -55,194 +72,87 @@ python -m venv venv
 venv\Scripts\activate
 ```
 
-3. Instale as dependências:
+3. **Instale as dependências:**
 ```bash
 pip install -r requirements.txt
 ```
 
-4. Configure as variáveis de ambiente:
+4. **Prepare o Banco de Dados:**
 ```bash
-# Crie um arquivo .env na raiz do projeto
-cp .env.example .env
-```
-
-5. Execute as migrações:
-```bash
+# Executa as migrações (cria tabelas de usuários, histórico, etc)
 python manage.py migrate
 ```
 
-6. Inicie o servidor de desenvolvimento:
+5. **Inicie o servidor:**
 ```bash
 python manage.py runserver
 ```
 
-7. Acesse no navegador:
-```
-# Interface Web
-http://localhost:8000
-
-# Documentação da API
-http://localhost:8000/api/v1/docs/
-```
-
-## 🌐 API REST
-
-O projeto disponibiliza uma API REST completa para integração com outros sistemas.
-
-### Endpoints Disponíveis
-
-**Base URL:** `http://localhost:8000/api/v1/`
-
-| Endpoint | Método | Descrição | Parâmetros |
-|----------|--------|-----------|------------|
-| `/api/v1/` | GET | Informações da API | - |
-| `/api/v1/generate/person/` | GET | Gerar pessoas | `quantity` (1-1000), `export_format` (json/csv) |
-| `/api/v1/generate/company/` | GET | Gerar empresas | `quantity` (1-1000), `export_format` (json/csv) |
-| `/api/v1/generate/pokemon/` | GET | Gerar Pokemons | `quantity` (1-1010), `generation` (opcional - geração de 1-9) |
-| `/api/v1/generate/dog/` | GET | Gerar Cães | `quantity` (1-1000) |
-| `/api/v1/docs/` | GET | Documentação Swagger | - |
-| `/api/v1/redoc/` | GET | Documentação ReDoc | - |
-| `/api/v1/schema/` | GET | Schema OpenAPI | - |
-
-## 📡 Integrações com APIs Externas
-
-A API integra serviços externos para geração de dados fake:
-
-- **PokéAPI**  
-  Endpoint: `/api/v1/generate/pokemon/`  
-  https://pokeapi.co
-
-- **Dog CEO API**  
-  Endpoint: `/api/v1/generate/dog/`  
-  https://dog.ceo/dog-api/
-
-### Exemplos de Uso
-
-**Gerar 10 pessoas (JSON):**
-```bash
-curl "http://localhost:8000/api/v1/generate/person/?quantity=10"
-```
-
-**Gerar 5 empresas (CSV):**
-```bash
-curl "http://localhost:8000/api/v1/generate/company/?quantity=5&export_format=csv" -o empresas.csv
-```
-
-**Resposta JSON (exemplo):**
-```json
-{
-  "success": true,
-  "data": [
-    {
-      "nome_completo": "João Silva",
-      "cpf": "123.456.789-00",
-      "email": "joao@email.com",
-      "telefone_fixo": "(11) 1234-5678",
-      "endereco": {
-        "cidade": "São Paulo",
-        "estado": "SP"
-      }
-    }
-  ],
-  "total": 1,
-  "message": "1 pessoa(s) gerada(s) com sucesso"
-}
-```
-
-### Rate Limiting
-
-A API possui limite de **100 requisições por hora** para usuários não autenticados.
-
-### Documentação Interativa
-
-Acesse `/api/v1/docs/` para testar os endpoints diretamente no navegador com a interface Swagger.
+6. **Acesse:**
+- Interface Web: `http://localhost:8000`
+- API Docs: `http://localhost:8000/api/v1/docs/`
 
 ## 📦 Estrutura do Projeto
 
+A organização modular facilita a escalabilidade e manutenção:
+
 ```
 fake-data-generator/
-├── config/                 # Configurações do Django
-├── generator/              # App principal
-│   ├── api/                # Configurações da API
-│   ├── generators/         # Geradores de dados
-│   ├── exporters/          # Exportadores (JSON, CSV)
-│   ├── external/           # Integrações com API externas
-│   ├── templates/          # Templates HTML
-│   └── views.py            # Views
-├── static/                 # Arquivos estáticos
+├── config/                 # Configurações globais do Django
+├── accounts/               # [NOVO] Gestão de usuários e autenticação
+│   ├── forms.py            # Formulários customizados com Bootstrap
+│   └── views.py            # Lógica de login/registro
+├── history/                # [NOVO] Histórico e persistência
+│   ├── models.py           # Model GenerationHistory
+│   └── views.py            # Dashboard de histórico
+├── generator/              # App principal (Core)
+│   ├── generators/         # Lógica de geração (Pessoa, Empresa)
+│   ├── exporters/          # Lógica de exportação (JSON, CSV)
+│   ├── external/           # Clientes HTTP para APIs externas
+│   └── api/                # Endpoints REST
+├── static/                 # Assets (CSS, JS, Imagens)
 ├── manage.py
-├── requirements.txt
-└── README.md
+└── requirements.txt
 ```
 
-## 🧪 Testes
+## 🧪 Qualidade de Código e Testes
 
-O projeto possui testes automatizados com **pytest** para garantir a qualidade do código.
+O projeto mantém rigoroso controle de qualidade:
+- **Testes Unitários:** Validam geradores e exportadores isoladamente.
+- **Testes de Integração:** Validam fluxos de API e Views.
+- **Cobertura:** +85% de coverage garantido.
 
-### Executar os Testes
-
+Para rodar os testes:
 ```bash
-# Rodar todos os testes
-pytest
-
-# Rodar com mais detalhes
-pytest -v
-
-# Rodar com cobertura
-pytest --cov
-
-# Gerar relatório HTML de cobertura
-pytest --cov --cov-report=html
-```
-
-### Cobertura Atual
-
-O projeto mantém **alta cobertura de testes** (85%+), testando:
-- ✅ Geradores de dados (PersonGenerator, CompanyGenerator)
-- ✅ Exportadores (JSON, CSV)
-- ✅ Views e integrações
-- ✅ API REST (endpoints, validações, formatos)
-- ✅ Validações e casos de erro
-
-### Estrutura de Testes
-
-```
-generator/tests/
-├── test_generators.py    # Testes dos geradores
-├── test_exporters.py     # Testes dos exportadores
-├── test_views.py         # Testes das views
-└── test_api.py           # Testes da API REST
+pytest --cov --cov-report=term-missing
 ```
 
 ## 🎯 Roadmap
 
-### V0 (Atual)
-- [x] Geração de pessoas
-- [x] Geração de empresas
-- [x] Exportação JSON/CSV
-- [x] Interface básica
-- [x] Testes automatizados (85%+ cobertura)
-- [x] API REST v1
-- [x] Documentação interativa (Swagger/ReDoc)
+### ✅ Concluído (V1.0)
+- [x] Geração de pessoas e empresas (Faker)
+- [x] Integração com APIs externas (Pokémon/Dog)
+- [x] Exportação JSON/CSV e Preview
+- [x] API REST documentada (Swagger)
+- [x] **Sistema de Login e Cadastro de Usuários**
+- [x] **Histórico de Gerações persistente**
+- [x] **Dashboard "Meus Registros"**
 
-### V1 (Próximas funcionalidades)
-- [ ] Mais tipos de dados (produtos, transações)
-- [ ] Autenticação JWT na API
-- [ ] Templates customizáveis
-- [ ] Histórico de gerações
-- [ ] CI/CD (GitHub Actions)
-- [ ] Deploy em produção
-
-### V2 (Futuro)
-- [ ] Autenticação de usuários na interface
-- [ ] Dashboard com estatísticas
-- [ ] Geração em lote/agendada
-- [ ] Webhooks
+### 🚧 Próximos Passos (V2.0 - Performance & Features)
+- [ ] **Novos Tipos de Dados:** Produtos, Veículos, Transações Bancárias.
+- [ ] **Novos Exportadores:** XML, SQL (INSERT statements), Excel (XLSX).
+- [ ] **UI/UX:** Dark Mode, temas personalizáveis e dashboard com gráficos.
+- [ ] **Assincronismo:** Refatorar chamadas externas para `async`/`aiohttp` (High Performance).
+- [ ] **Background Tasks:** Implementar Celery/Redis para gerações massivas (>10k registros).
+- [ ] **Docker:** Containerização completa da aplicação e banco.
+- [ ] **CI/CD:** Pipelines de teste e deploy automático (GitHub Actions).
 
 ## 👩‍💻 Autora
 
-Desenvolvido com 🤝 por Laura Bonilha
+Desenvolvido com 💜 por **Laura Bonilha**
+
+Esta ferramenta foi criada com foco em **Boas Práticas de Engenharia de Software**, demonstrando arquitetura limpa, testes automatizados e evolução consistente de produto.
 
 ---
 
-⭐ Se este projeto foi útil para você, considere dar uma estrela no repositório!
+⭐ **Gostou do projeto?** Se ele foi útil para você ou serviu de referência, considere dar uma estrela no repositório!
