@@ -31,6 +31,12 @@
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" aria-labelledby="userDropdown">
                                 <li>
+                                    <a class="dropdown-item" href="{% url 'history:my_history' %}">
+                                        <i class="fas fa-history me-2"></i>Histórico
+                                    </a>
+                                </li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
                                     <form method="post" action="{% url 'logout' %}">
                                         {% csrf_token %}
                                         <button type="submit" class="dropdown-item text-danger">

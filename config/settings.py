@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     # Apps do projeto
     'generator',
     'accounts',
+    'history',
 ]
 
 MIDDLEWARE = [

@@ -3,6 +3,7 @@ from django.http import JsonResponse
 from .generators import PersonGenerator, CompanyGenerator
 from generator.external import PokemonGenerator, DogGenerator
 from .exporters import JSONExporter, CSVExporter
+from history.models import GenerationHistory
 
 
 def home(request):
@@ -51,6 +52,15 @@ def generate_data(request):
             'error': 'Tipo de dado inválido'
         }, status=400)
     
+    # Salva no histórico se o usuário estiver logado
+    if request.user.is_authenticated:
+        GenerationHistory.objects.create(
+            user=request.user,
+            data_type=data_type,
+            quantity=quantity,
+            export_format=export_format
+        )
+            
     # Exporta no formato solicitado
     if export_format == 'json':
         return JSONExporter.export(data, filename)
