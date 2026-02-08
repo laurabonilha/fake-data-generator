@@ -1,0 +1,153 @@
+:root {
+    --primary-color: #4F46E5; /* Indigo */
+    --secondary-color: #10B981; /* Emerald */
+    --dark-bg: #111827;
+    --light-bg: #F3F4F6;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f8f9fa;
+    color: #1f2937;
+    overflow-x: hidden; /* Evita scroll lateral por causa das blobs */
+}
+
+/* Hero Section */
+.hero-section {
+    padding: 80px 0;
+    position: relative;
+}
+
+.hero-title {
+    font-weight: 800;
+    font-size: 3.5rem;
+    line-height: 1.1;
+    background: linear-gradient(90deg, #111827 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: #6b7280;
+    font-weight: 400;
+    max-width: 600px;
+}
+
+/* Navbar Minimalista */
+.navbar-landing {
+    background: transparent;
+    padding: 20px 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: #111827 !important;
+}
+
+/* Feature Cards */
+.feature-card {
+    background: white;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    height: 100%;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.1);
+    border-color: rgba(79, 70, 229, 0.1);
+}
+
+.icon-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Botões Customizados */
+.btn-primary-custom {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 12px 32px;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.btn-primary-custom:hover {
+    background-color: #4338ca;
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btn-outline-custom {
+    border: 2px solid #e5e7eb;
+    color: #374151;
+    padding: 12px 32px;
+    font-weight: 600;
+    border-radius: 8px;
+    background: white;
+    text-decoration: none;
+}
+
+.btn-outline-custom:hover {
+    border-color: #d1d5db;
+    background: #f9fafb;
+    color: #111827;
+}
+
+/* Efeito de Vidro (Glassmorphism) para os Cards Flutuantes */
+.floating-card {
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.floating-card:hover {
+    transform: scale(1.02) !important; /* Efeito interativo sutil */
+    z-index: 10 !important;
+}
+
+/* Background Blobs Animados */
+.blob {
+    position: absolute;
+    filter: blur(80px);
+    z-index: -1;
+    opacity: 0.6;
+}
+.blob-1 { top: -10%; right: -5%; width: 500px; height: 500px; background: #C7D2FE; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; animation: blob 10s infinite alternate; }
+.blob-2 { bottom: -10%; left: -10%; width: 400px; height: 400px; background: #D1FAE5; border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; animation: blob 12s infinite alternate-reverse; }
+
+@keyframes blob {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(30px, 50px) rotate(20deg); }
+}
+
+/* Stats Section */
+.stats-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* Responsividade Hero Illustration */
+@media (max-width: 991px) {
+    .hero-illustration {
+        display: none !important;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+    }
+}

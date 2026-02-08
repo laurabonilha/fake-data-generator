@@ -7,20 +7,31 @@ from history.models import GenerationHistory
 
 
 def home(request):
-    """View da página inicial."""
-    return render(request, 'generator/home.html')
-
+    """
+    View da página inicial.
+    
+    Se logado -> Mostra Gerador (generator/home.html)
+    Se deslogado -> Mostra Landing Page (generator/landing.html)
+    """
+    if request.user.is_authenticated:
+        return render(request, 'generator/home.html')
+    else:
+        return render(request, 'generator/landing.html')
 
 
 async def generate_data(request):
     """
     View ASSÍNCRONA para gerar dados fake.
     
-    Parâmetros via GET:
-        - data_type: tipo de dado (person, company)
-        - quantity: quantidade de registros
-        - export_format: formato de exportação (json, csv, preview)
+    APENAS PARA USUÁRIOS LOGADOS.
     """
+    # Verificação de login assíncrona
+    user = await request.auser()
+    if not user.is_authenticated:
+        return JsonResponse({
+            'error': 'Você precisa estar logado para gerar dados.'
+        }, status=401)
+
     data_type = request.GET.get('data_type', 'person')
     try:
         quantity = int(request.GET.get('quantity', 10))
@@ -58,9 +69,7 @@ async def generate_data(request):
             'error': 'Tipo de dado inválido'
         }, status=400)
     
-    # Salva no histórico se o usuário estiver logado
-    # Usamos await user.is_authenticated porque o request.user pode ser Lazy
-    user = await request.auser()
+    # Salva no histórico (usuário já está validado no início)
     if user.is_authenticated:
         await GenerationHistory.objects.acreate(
             user=user,

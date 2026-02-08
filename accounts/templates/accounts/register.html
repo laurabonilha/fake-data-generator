@@ -1,43 +1,112 @@
-{% extends 'generator/base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro - Fake Data Generator</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <!-- Auth CSS -->
+    <link href="{% static 'accounts/css/auth.css' %}" rel="stylesheet">
+</head>
+<body>
+    <!-- Background Blobs -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
 
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+                <div class="auth-card p-4 p-md-5">
+                    <div class="auth-header mb-4">
+                        <a href="{% url 'generator:home' %}" class="brand-logo text-decoration-none d-flex align-items-center justify-content-center gap-2">
+                            <i class="fas fa-rocket text-primary fa-lg"></i>
+                            <span class="fs-4 fw-bold text-dark">Cadastro Rápido</span>
+                        </a>
+                        <p class="text-muted small mt-2">Junte-se a milhares de desenvolvedores.</p>
+                    </div>
 
-{% block title %}Cadastro - Fake Data Generator{% endblock %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
 
-{% block content %}
-<div class="row justify-content-center mt-5">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-sm">
-            <div class="card-body p-4">
-                <h2 class="text-center mb-4">Criar Conta</h2>
-                
-                <form method="post">
-                    {% csrf_token %}
-                    
-                    {% for field in form %}
-                    <div class="mb-3">
-                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
-                        {{ field }}
-                        {% if field.help_text %}
-                        <div class="form-text text-muted small">{{ field.help_text }}</div>
-                        {% endif %}
-                        {% for error in field.errors %}
-                        <div class="text-danger small">
-                            {{ error }}
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% for field in form %}
+                        <div class="mb-3">
+                            <label for="{{ field.id_for_label }}" class="form-label fw-medium text-secondary">
+                                {{ field.label }}
+                            </label>
+                            
+                            <div class="input-group">
+                                {% if 'password' in field.name %}
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="fas fa-lock"></i></span>
+                                {% else %}
+                                    <span class="input-group-text bg-white border-end-0 text-muted"><i class="fas fa-user"></i></span>
+                                {% endif %}
+                                
+                                {{ field }} <!-- O widget já tem classe form-control do models/forms.py? Se não, precisamos adicionar via widget tweaks ou JS -->
+                            </div>
+                            
+                            {% if field.help_text %}
+                                <div class="form-text small text-muted mt-1" style="font-size: 0.75rem;">
+                                    {{ field.help_text|safe }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if field.errors %}
+                                <div class="invalid-feedback d-block">
+                                    {{ field.errors.0 }}
+                                </div>
+                            {% endif %}
                         </div>
                         {% endfor %}
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary-primary-custom w-100 py-2 rounded-3 fw-bold shadow-sm" style="background-color: var(--primary-color); color: white; border: none; transition: all 0.2s;">
+                                Criar Minha Conta
+                            </button>
+                        </div>
+                    </form>
+
+                    <div class="auth-links mt-4 pt-3 border-top text-center">
+                        <p class="text-muted mb-0">Já tem uma conta? <a href="{% url 'login' %}" class="fw-bold text-decoration-none">Fazer Login</a></p>
                     </div>
-                    {% endfor %}
-                    
-                    <div class="d-grid mt-4">
-                        <button type="submit" class="btn btn-success btn-lg">Cadastrar</button>
-                    </div>
-                </form>
-                
-                <div class="text-center mt-3">
-                    <p class="mb-0">Já tem uma conta? <a href="{% url 'login' %}">Faça login</a></p>
                 </div>
             </div>
         </div>
     </div>
-</div>
-{% endblock %}
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Script para adicionar classes Bootstrap aos campos gerados pelo Django Form -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var inputs = document.querySelectorAll('input');
+            inputs.forEach(function(input) {
+                input.classList.add('form-control');
+                input.classList.add('border-start-0'); // Remove borda esquerda para integrar com ícone
+                input.classList.add('ps-0'); // Remove padding left
+            });
+            
+            // Corrige estilo dos botões de ajuda do password
+            var helpTexts = document.querySelectorAll('.helptext');
+            helpTexts.forEach(function(el) {
+                el.classList.add('small', 'text-muted');
+            });
+        });
+    </script>
+</body>
+</html>
