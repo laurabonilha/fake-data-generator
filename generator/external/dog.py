@@ -4,6 +4,8 @@ import random
 from typing import List, Dict
 from faker import Faker
 from .base import BaseExternalGenerator
+import httpx
+import asyncio
 
 
 class DogGenerator(BaseExternalGenerator):
@@ -23,9 +25,9 @@ class DogGenerator(BaseExternalGenerator):
         self.fake = Faker('pt_BR')
         self._breeds_cache = None
     
-    def generate(self, quantity: int = 1) -> List[Dict]:
+    async def generate(self, quantity: int = 1) -> List[Dict]:
         """
-        Gera dados de cachorros.
+        Gera dados de cachorros de forma ASSÍNCRONA.
         
         Args:
             quantity: Quantidade de cachorros a gerar
@@ -34,37 +36,53 @@ class DogGenerator(BaseExternalGenerator):
             Lista com dados dos cachorros
         """
         dogs = []
+        tasks = []
         
-        # Busca lista de raças (só uma vez)
-        if not self._breeds_cache:
-            breeds_data = self._make_request('breeds/list/all')
-            if breeds_data and 'message' in breeds_data:
-                self._breeds_cache = list(breeds_data['message'].keys())
-        
-        if not self._breeds_cache:
-            # Fallback se API falhar
-            return [self._generate_fallback() for _ in range(quantity)]
-        
-        for _ in range(quantity):
-            dog_data = self._fetch_random_dog()
-            if dog_data:
-                dogs.append(dog_data)
-            else:
-                dogs.append(self._generate_fallback())
+        async with httpx.AsyncClient() as client:
+            # Busca lista de raças (uma única vez, assincronamente)
+            if not self._breeds_cache:
+                breeds_data = await self._make_request(client, 'breeds/list/all')
+                if breeds_data and 'message' in breeds_data:
+                    self._breeds_cache = list(breeds_data['message'].keys())
+            
+            if not self._breeds_cache:
+                # Fallback se API falhar na listagem
+                return [self._generate_fallback() for _ in range(quantity)]
+            
+            # Cria tarefas concorrentes
+            for _ in range(quantity):
+                tasks.append(self._fetch_random_dog(client))
+                
+            # Dispara todas
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            for result in results:
+                 if isinstance(result, Exception) or not result:
+                      dogs.append(self._generate_fallback())
+                 else:
+                      dogs.append(result)
         
         return dogs
     
-    def _fetch_random_dog(self) -> Dict:
-        """Busca dados de um cachorro aleatório."""
+    async def _fetch_random_dog(self, client: httpx.AsyncClient) -> Dict:
+        """Busca dados de um cachorro aleatório assincronamente."""
+        if not self._breeds_cache:
+             return None
+             
         breed = random.choice(self._breeds_cache)
         
-        # Busca imagens da raça
-        images_data = self._make_request(f'breed/{breed}/images/random')
+        # Busca imagem da raça
+        images_data = await self._make_request(client, f'breed/{breed}/images/random')
         
         if not images_data or 'message' not in images_data:
             return None
         
-        return self._format_dog_data(breed, images_data['message'])
+        # A API retorna a imagem como string única, mas o método de formatação espera lista?
+        # O código original passava images_data['message'] que é string (url).
+        # Vamos corrigir isso e passar como lista de 1 item.
+        image_url = images_data['message']
+        
+        return self._format_dog_data(breed, [image_url])
     
     def _format_dog_data(self, breed: str, images: List[str]) -> Dict:
         """Formata dados do cachorro."""

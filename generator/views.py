@@ -11,9 +11,10 @@ def home(request):
     return render(request, 'generator/home.html')
 
 
-def generate_data(request):
+
+async def generate_data(request):
     """
-    View para gerar dados fake.
+    View ASSÍNCRONA para gerar dados fake.
     
     Parâmetros via GET:
         - data_type: tipo de dado (person, company)
@@ -21,7 +22,11 @@ def generate_data(request):
         - export_format: formato de exportação (json, csv, preview)
     """
     data_type = request.GET.get('data_type', 'person')
-    quantity = int(request.GET.get('quantity', 10))
+    try:
+        quantity = int(request.GET.get('quantity', 10))
+    except ValueError:
+        quantity = 10
+        
     export_format = request.GET.get('export_format', 'preview')
     
     # Validações
@@ -41,11 +46,12 @@ def generate_data(request):
         filename = f'empresas_{quantity}.{export_format}'
     elif data_type == 'pokemon':
         generator = PokemonGenerator()
-        data = generator.generate(quantity)
+        # Aqui está a mágica: await na chamada async!
+        data = await generator.generate(quantity)
         filename = f'pokemons_{quantity}.{export_format}'
     elif data_type == 'dog':
         generator = DogGenerator()
-        data = generator.generate(quantity)
+        data = await generator.generate(quantity)
         filename = f'cachorros_{quantity}.{export_format}'
     else:
         return JsonResponse({
@@ -53,9 +59,11 @@ def generate_data(request):
         }, status=400)
     
     # Salva no histórico se o usuário estiver logado
-    if request.user.is_authenticated:
-        GenerationHistory.objects.create(
-            user=request.user,
+    # Usamos await user.is_authenticated porque o request.user pode ser Lazy
+    user = await request.auser()
+    if user.is_authenticated:
+        await GenerationHistory.objects.acreate(
+            user=user,
             data_type=data_type,
             quantity=quantity,
             export_format=export_format

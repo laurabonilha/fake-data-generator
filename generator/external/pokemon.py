@@ -4,6 +4,8 @@ import random
 from typing import List, Dict
 from faker import Faker
 from .base import BaseExternalGenerator
+import httpx
+import asyncio
 
 
 class PokemonGenerator(BaseExternalGenerator):
@@ -40,9 +42,9 @@ class PokemonGenerator(BaseExternalGenerator):
             9: (906, 1010),   # Paldea
         }
     
-    def generate(self, quantity: int = 1) -> List[Dict]:
+    async def generate(self, quantity: int = 1) -> List[Dict]:
         """
-        Gera dados de Pokémons.
+        Gera dados de Pokémons de forma ASSÍNCRONA.
         
         Args:
             quantity: Quantidade de Pokémons a gerar
@@ -51,29 +53,43 @@ class PokemonGenerator(BaseExternalGenerator):
             Lista com dados dos Pokémons
         """
         pokemons = []
+        tasks = []
         
-        for _ in range(quantity):
-            pokemon_data = self._fetch_random_pokemon()
-            if pokemon_data:
-                pokemons.append(pokemon_data)
-            else:
-                # Fallback se API falhar
-                pokemons.append(self._generate_fallback())
+        # Cria uma sessão HTTP assíncrona única para todas as requisições
+        async with httpx.AsyncClient() as client:
+            # Cria todas as tarefas (Requests) ao mesmo tempo
+            for _ in range(quantity):
+                tasks.append(self._fetch_random_pokemon(client))
+            
+            # Aguarda todas terminarem (concorência real)
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            for result in results:
+                if isinstance(result, Exception):
+                    # Se deu erro, usa o fallback
+                    pokemons.append(self._generate_fallback())
+                elif result:
+                    pokemons.append(result)
+                else:
+                    pokemons.append(self._generate_fallback())
         
         return pokemons
     
-    def _fetch_random_pokemon(self) -> Dict:
-        """Busca dados de um Pokémon aleatório."""
+    async def _fetch_random_pokemon(self, client: httpx.AsyncClient) -> Dict:
+        """Busca dados de um Pokémon aleatório assincronamente."""
         pokemon_id = self._get_random_pokemon_id()
         
-        data = self._make_request(f"pokemon/{pokemon_id}")
+        # Busca dados base do Pokémon
+        data = await self._make_request(client, f"pokemon/{pokemon_id}")
         
         if not data:
             return None
         
-        # Busca dados da espécie para obter descrição em PT
-        species_data = self._make_request(f"pokemon-species/{pokemon_id}")
+        # Busca dados da espécie (para descrição/nome traduzido)
+        # Nota: Podemos fazer isso em paralelo também se quisermos otimizar ainda mais!
+        species_data = await self._make_request(client, f"pokemon-species/{pokemon_id}")
         
+        # Formatação continua síncrona (CPU bound, mas muito leve)
         return self._format_pokemon_data(data, species_data)
     
     def _get_random_pokemon_id(self) -> int:

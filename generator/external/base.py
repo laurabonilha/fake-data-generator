@@ -1,8 +1,8 @@
-# generator/generators/external/base.py
+
 """Classe base para geradores que consomem APIs externas."""
-import requests
+import httpx
+import asyncio
 from typing import Dict, Any, Optional
-from functools import lru_cache
 import logging
 
 logger = logging.getLogger(__name__)
@@ -10,60 +10,54 @@ logger = logging.getLogger(__name__)
 
 class BaseExternalGenerator:
     """
-    Classe base para geradores que consomem APIs externas.
+    Classe base ASSÍNCRONA para geradores que consomem APIs externas.
     
     Fornece funcionalidades comuns como:
-    - Cache de requisições
+    - Cliente HTTP assíncrono (httpx)
     - Tratamento de erros
     - Timeout configurável
     - Retry logic
     """
     
     BASE_URL: str = ""
-    TIMEOUT: int = 5
-    CACHE_SIZE: int = 100
+    TIMEOUT: int = 10  # Aumentei um pouco para garantir
     
-    def _make_request(
+    async def _make_request(
         self, 
+        client: httpx.AsyncClient,
         endpoint: str, 
-        params: Optional[Dict[str, Any]] = None,
-        use_cache: bool = True
+        params: Optional[Dict[str, Any]] = None
     ) -> Optional[Dict]:
         """
-        Faz requisição HTTP para a API externa.
+        Faz requisição HTTP assíncrona para a API externa.
         
         Args:
+            client: Cliente HTTP assíncrono reutilizável
             endpoint: Endpoint da API
             params: Parâmetros da requisição
-            use_cache: Se deve usar cache
             
         Returns:
             Dicionário com resposta ou None em caso de erro
         """
-        url = f"{self.BASE_URL}/{endpoint}"
+        if endpoint.startswith("http"):
+             url = endpoint
+        else:
+             url = f"{self.BASE_URL}/{endpoint}"
         
         try:
-            if use_cache:
-                return self._cached_request(url, frozenset(params.items()) if params else None)
-            else:
-                response = requests.get(url, params=params, timeout=self.TIMEOUT)
-                response.raise_for_status()
-                return response.json()
+            response = await client.get(url, params=params, timeout=self.TIMEOUT)
+            response.raise_for_status()
+            return response.json()
                 
-        except requests.exceptions.Timeout:
+        except httpx.TimeoutException:
             logger.warning(f"Timeout ao acessar {url}")
             return None
-        except requests.exceptions.RequestException as e:
-            logger.error(f"Erro ao acessar API: {e}")
+        except httpx.HTTPStatusError as e:
+            logger.error(f"Erro HTTP {e.response.status_code} ao acessar {url}")
             return None
-    
-    @lru_cache(maxsize=100)
-    def _cached_request(self, url: str, frozen_params):
-        """Versão cacheada da requisição."""
-        params = dict(frozen_params) if frozen_params else None
-        response = requests.get(url, params=params, timeout=self.TIMEOUT)
-        response.raise_for_status()
-        return response.json()
+        except httpx.RequestError as e:
+            logger.error(f"Erro de requisição ao acessar API: {e}")
+            return None
     
     def _generate_fallback(self) -> Dict:
         """
